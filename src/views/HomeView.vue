@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import sample from '@/assets/sample1.json';
-import RankedPlayerCard from '@/components/RankedPlayerCard.vue';
+import RankedPlayerCard from '@/components/overwatch/RankedPlayerCard.vue';
 import type { ProfileSummary } from '@/owProfile';
 </script>
 

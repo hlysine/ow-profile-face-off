@@ -1,3 +1,5 @@
+import assets from '@/assets/ow-assets.json';
+
 export interface OWProfile {
   summary: ProfileSummary;
   stats: PerPlatform<PerGamemode<ProfileStats>>;
@@ -128,3 +130,11 @@ export function rankDivisionIndex(division: RankDivision): number {
 export function rankToIndex(rank: Rank): number {
   return rankDivisionIndex(rank.division) * 10 + 6 - rank.tier;
 }
+
+export interface OWAssets {
+  heroes: {
+    [name: string]: string;
+  };
+}
+
+export const owAssets: OWAssets = assets;

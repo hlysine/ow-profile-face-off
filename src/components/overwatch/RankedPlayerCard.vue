@@ -32,8 +32,8 @@ const competitive = computed(() => props.profile.competitive[platform.value]);
 </script>
 
 <template>
-  <div class="flex flex-col w-min bg-slate-800">
-    <PlayerCard :player="profile" />
+  <div class="flex flex-col w-min bg-slate-800 rounded-sm overflow-hidden">
+    <PlayerCard :player="profile" class="rounded-b-none" />
     <div v-if="!!competitive" class="flex flex-col items-center gap-2 m-2">
       <span class="text-sm text-gray-400">
         Season {{ competitive.season }} · {{ platform === 'pc' ? 'PC' : 'Console' }}
