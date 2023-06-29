@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BannerSmall from '@/components/overwatch/BannerSmall.vue';
 import TextBox from '@/components/ui/TextBox.vue';
 import { searchPlayerByName } from '@/owProfile';
 import { computed, ref, watchEffect } from 'vue';
@@ -42,29 +43,36 @@ const filteredResult = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center overflow-y-scroll">
-    <TextBox
-      v-model="searchName"
-      class="w-[320px] m-4 mb-1"
-      :class="{ 'animate-pulse': fetching }"
-      placeholder="Type in your Battle Tag"
-      :is-valid="!validationError"
-    />
-    <span v-if="!!validationError" class="text-xs text-red-600">{{ validationError }}</span>
-    <CheckBox class="m-2" v-model="includePrivate" label="Include private profiles" />
-    <span v-if="!validationError && !!filteredResult && 'error' in filteredResult" class="mt-4 leading-10">{{
-      filteredResult.error
-    }}</span>
-    <div
-      v-else-if="!validationError && !!filteredResult && !('error' in filteredResult)"
-      class="my-4 flex flex-1 flex-wrap items-center justify-center gap-4 w-full"
-    >
-      <OnlinePlayerCard
-        v-for="item in filteredResult.results"
-        :key="item.player_id"
-        :player-id="item.player_id"
-        :search-item="item"
+  <div class="w-full h-full grid grid-rows-[min-content_1fr]">
+    <header>
+      <div class="flex flex-col w-full items-center p-4 box-border">
+        <BannerSmall />
+      </div>
+    </header>
+    <div class="flex flex-col items-center overflow-y-scroll">
+      <TextBox
+        v-model="searchName"
+        class="w-[320px] m-4 mb-1"
+        :class="{ 'animate-pulse': fetching }"
+        placeholder="Type in your Battle Tag"
+        :is-valid="!validationError"
       />
+      <span v-if="!!validationError" class="text-xs text-red-600">{{ validationError }}</span>
+      <CheckBox class="m-2" v-model="includePrivate" label="Include private profiles" />
+      <span v-if="!validationError && !!filteredResult && 'error' in filteredResult" class="mt-4 leading-10">{{
+        filteredResult.error
+      }}</span>
+      <div
+        v-else-if="!validationError && !!filteredResult && !('error' in filteredResult)"
+        class="my-4 flex flex-1 flex-wrap items-center justify-center gap-4 w-full"
+      >
+        <OnlinePlayerCard
+          v-for="item in filteredResult.results"
+          :key="item.player_id"
+          :player-id="item.player_id"
+          :search-item="item"
+        />
+      </div>
     </div>
   </div>
 </template>
