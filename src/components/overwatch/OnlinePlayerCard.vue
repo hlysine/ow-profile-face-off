@@ -3,7 +3,7 @@ import { fetchSummaryById, fillSummary, type PlayerSearchItem } from '@/owProfil
 import RankedPlayerCard from './RankedPlayerCard.vue';
 import useImperativeFetch from '@/composables/useImperativeFetch';
 import { computed } from 'vue';
-import FlatButton from '@/components/ui/FlatButton.vue';
+import CustomButton from '@/components/ui/CustomButton.vue';
 import { useRouter } from 'vue-router';
 
 const props = defineProps<{ playerId: string; searchItem?: PlayerSearchItem }>();
@@ -45,7 +45,7 @@ function openProfile() {
       v-if="displayResult !== result"
       class="absolute top-0 bottom-0 left-0 right-0 flex flex-col items-center justify-center bg-gradient-to-t from-slate-950 via-slate-900 via-40% to-transparent border border-slate-800 box-border"
     >
-      <FlatButton @click="e => fetch(props.playerId)">Load Preview</FlatButton>
+      <CustomButton @click="e => fetch(props.playerId)" type="flat">Load Preview</CustomButton>
     </div>
   </div>
 </template>
