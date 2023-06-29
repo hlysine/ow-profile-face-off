@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import VueFeather from 'vue-feather';
-import type { PlayerSummary } from '@/owProfile';
+import { owAssets, type PlayerSummary } from '@/owProfile';
 
 defineProps<{ player: PlayerSummary }>();
 </script>
 
 <template>
-  <div class="relative h-[60px] w-[320px] text-black bg-white">
+  <div class="relative h-[60px] w-[320px] text-black bg-white rounded-sm overflow-hidden">
     <div
       class="absolute top-0 bottom-0 left-0 right-0 w-full h-full bg-cover bg-center bg-white"
       :style="{
@@ -19,7 +19,7 @@ defineProps<{ player: PlayerSummary }>();
       <div
         class="aspect-square h-full bg-cover bg-center"
         :style="{
-          backgroundImage: `url('${player.avatar}')`,
+          backgroundImage: `url('${player.avatar}'), url('${owAssets.player.defaultIcon}')`,
         }"
       ></div>
       <div class="flex flex-col">

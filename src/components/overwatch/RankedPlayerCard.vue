@@ -7,6 +7,7 @@ import RoleRank from './RoleRank.vue';
 const props = defineProps<{ profile: ProfileSummary }>();
 
 const platform = computed<keyof PerPlatform<any>>(() => {
+  if (!props.profile.competitive) return 'pc';
   const { pc, console } = props.profile.competitive;
   const pcRank = pc
     ? Math.max(
@@ -28,7 +29,7 @@ const platform = computed<keyof PerPlatform<any>>(() => {
     return 'console';
   }
 });
-const competitive = computed(() => props.profile.competitive[platform.value]);
+const competitive = computed(() => props.profile.competitive?.[platform.value]);
 </script>
 
 <template>
@@ -44,6 +45,8 @@ const competitive = computed(() => props.profile.competitive[platform.value]);
         <RoleRank :rank="competitive.support" />
       </div>
     </div>
-    <div v-else class="flex-1 w-full flex items-center justify-center text-gray-400">No rank data.</div>
+    <div v-else class="flex-1 w-full flex items-center justify-center text-gray-400 min-h-[108px] m-2">
+      No rank data.
+    </div>
   </div>
 </template>

@@ -1,61 +1,70 @@
 <script setup lang="ts">
-import RankedPlayerCard from '@/components/overwatch/RankedPlayerCard.vue';
 import TextBox from '@/components/ui/TextBox.vue';
-import type { OWProfile } from '@/owProfile';
+import { searchPlayerByName } from '@/owProfile';
 import { computed, ref, watchEffect } from 'vue';
-import debounce from 'lodash/debounce';
+import OnlinePlayerCard from '@/components/overwatch/OnlinePlayerCard.vue';
+import useImperativeFetch from '@/composables/useImperativeFetch';
+import CheckBox from '@/components/ui/CheckBox.vue';
 
-const battleTagRegex = /^[^#]+#\d+$/;
+const battleTagRegex = /^[^#]+(?:#\d+)?$/;
 
-const battleTag = ref('');
+const searchName = ref('');
+const includePrivate = ref(false);
 const validationError = computed(() => {
-  const tag = battleTag.value;
+  const tag = searchName.value;
   if (tag.length === 0 || battleTagRegex.test(tag)) {
     return null;
   } else {
-    return 'Invalid Battle Tag';
+    return 'Invalid name';
   }
 });
 
-const profile = ref<OWProfile | { error: string } | null>(null);
-const fetching = ref(false);
-
-async function fetchProfileRaw(player: string) {
-  fetching.value = true;
-  player = player.replace('#', '-');
-  const res = await fetch(
-    `https://api.allorigins.win/get?url=${encodeURIComponent(`https://overfast-api.tekrop.fr/players/${player}`)}`
-  );
-  const data: OWProfile | { error: string } = JSON.parse((await res.json()).contents);
-  profile.value = data;
-  fetching.value = false;
-}
-
-const fetchProfile = debounce(fetchProfileRaw, 500, {
-  leading: false,
-  trailing: true,
-});
+const { fetching, result, fetch } = useImperativeFetch(searchPlayerByName, 500);
 
 watchEffect(() => {
-  if (validationError.value || battleTag.value === '') {
-    profile.value = null;
+  if (!validationError.value && searchName.value !== '') {
+    fetch(searchName.value);
+  }
+});
+
+const filteredResult = computed(() => {
+  if (!result.value || 'error' in result.value) {
+    return result.value;
+  } else if (includePrivate.value) {
+    return result.value;
   } else {
-    fetchProfile(battleTag.value);
+    return {
+      ...result.value,
+      results: result.value.results.filter(x => x.privacy === 'public'),
+    };
   }
 });
 </script>
 
 <template>
-  <div class="flex flex-col items-center">
+  <div class="flex flex-col items-center overflow-y-scroll">
     <TextBox
-      v-model="battleTag"
-      class="m-4 w-[320px] mb-1"
+      v-model="searchName"
+      class="w-[320px] m-4 mb-1"
       :class="{ 'animate-pulse': fetching }"
       placeholder="Type in your Battle Tag"
       :is-valid="!validationError"
     />
     <span v-if="!!validationError" class="text-xs text-red-600">{{ validationError }}</span>
-    <span v-else-if="!!profile && 'error' in profile" class="leading-10">{{ profile.error }}</span>
-    <RankedPlayerCard v-else-if="!!profile" class="m-4 shadow-lg" :profile="profile.summary" />
+    <CheckBox class="m-2" v-model="includePrivate" label="Include private profiles" />
+    <span v-if="!validationError && !!filteredResult && 'error' in filteredResult" class="mt-4 leading-10">{{
+      filteredResult.error
+    }}</span>
+    <div
+      v-else-if="!validationError && !!filteredResult && !('error' in filteredResult)"
+      class="my-4 flex flex-1 flex-wrap items-center justify-center gap-4 w-full"
+    >
+      <OnlinePlayerCard
+        v-for="item in filteredResult.results"
+        :key="item.player_id"
+        :player-id="item.player_id"
+        :search-item="item"
+      />
+    </div>
   </div>
 </template>

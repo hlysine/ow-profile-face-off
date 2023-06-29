@@ -15,11 +15,9 @@ export interface PerGamemode<T> {
   competitive: T | null;
 }
 
-export interface PerRole<T> {
-  tank: T | null;
-  damage: T | null;
-  support: T | null;
-}
+export type PerRole<T> = {
+  [key in Role]: T | null;
+};
 
 export interface ProfileStats {
   heroes_comparisons: HeroesComparisons;
@@ -69,7 +67,7 @@ export interface PlayerSummary {
 }
 
 export interface ProfileSummary extends PlayerSummary {
-  competitive: PerPlatform<CompetitiveSummary>;
+  competitive: PerPlatform<CompetitiveSummary> | null;
 }
 
 export interface CompetitiveSummary extends PerRole<Rank> {
@@ -86,6 +84,38 @@ export interface Rank {
 export interface Endorsement {
   level: number;
   frame: string;
+}
+
+export interface PlayerSearchItem {
+  player_id: string;
+  name: string;
+  privacy: string;
+  career_url: string;
+}
+
+export interface PlayerSearchResult {
+  total: number;
+  results: PlayerSearchItem[];
+}
+
+export interface HeroInfo {
+  key: string;
+  name: string;
+  portrait: string;
+  role: Role;
+}
+
+export interface RoleInfo {
+  key: Role;
+  name: string;
+  icon: string;
+  description: string;
+}
+
+export enum Role {
+  Tank = 'tank',
+  Damage = 'damage',
+  Support = 'support',
 }
 
 export enum Category {
@@ -107,6 +137,12 @@ export enum RankDivision {
   Master = 'master',
   Grandmaster = 'grandmaster',
 }
+
+export interface APIError {
+  error: string;
+}
+
+export type APIResponse<T> = T | APIError;
 
 export function rankDivisionIndex(division: RankDivision): number {
   switch (division) {
@@ -132,9 +168,54 @@ export function rankToIndex(rank: Rank): number {
 }
 
 export interface OWAssets {
+  player: {
+    defaultIcon: string;
+  };
   heroes: {
     [name: string]: string;
   };
 }
 
 export const owAssets: OWAssets = assets;
+
+async function fetchViaProxy(url: string) {
+  const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+  return JSON.parse((await res.json()).contents);
+}
+
+export async function fetchAllHeroes(): Promise<APIResponse<HeroInfo[]>> {
+  return await fetchViaProxy(`https://overfast-api.tekrop.fr/heroes`);
+}
+
+export async function fetchAllRoles(): Promise<APIResponse<RoleInfo[]>> {
+  return await fetchViaProxy(`https://overfast-api.tekrop.fr/roles`);
+}
+
+export async function searchPlayerByName(playerName: string): Promise<APIResponse<PlayerSearchResult>> {
+  return await fetchViaProxy(`https://overfast-api.tekrop.fr/players?name=${encodeURIComponent(playerName)}&limit=100`);
+}
+
+export async function fetchSummaryById(playerId: string): Promise<APIResponse<ProfileSummary>> {
+  playerId = playerId.replace('#', '-');
+  return await fetchViaProxy(`https://overfast-api.tekrop.fr/players/${playerId}/summary`);
+}
+
+export async function fetchProfileById(playerId: string): Promise<APIResponse<OWProfile>> {
+  playerId = playerId.replace('#', '-');
+  return await fetchViaProxy(`https://overfast-api.tekrop.fr/players/${playerId}`);
+}
+
+export function fillSummary(searchItem: PlayerSearchItem): ProfileSummary {
+  return {
+    username: searchItem.player_id.split('-')[0],
+    avatar: '',
+    title: '',
+    namecard: '',
+    privacy: searchItem.privacy,
+    endorsement: {
+      level: 0,
+      frame: '',
+    },
+    competitive: null,
+  };
+}
