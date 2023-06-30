@@ -1,16 +1,16 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
 import CustomButton from './CustomButton.vue';
 import { computed } from 'vue';
 
-const props = defineProps<{ choices: { [id: string]: string }; modelValue: string }>();
+const props = defineProps<{ choices: { [id: string]: T }; modelValue: T }>();
 const emit = defineEmits<{
-  'update:modelValue': [selectedId: string];
+  'update:modelValue': [selectedId: T];
 }>();
 const selection = computed({
   get() {
     return props.modelValue;
   },
-  set(val: string) {
+  set(val: T) {
     emit('update:modelValue', val);
   },
 });
@@ -19,13 +19,13 @@ const selection = computed({
 <template>
   <div class="flex gap-1 bg-slate-900 p-1 rounded">
     <CustomButton
-      v-for="[key, value] in Object.entries(choices)"
-      :key="key"
-      :type="selection === key ? 'raised' : 'flat'"
+      v-for="[text, id] in Object.entries(choices)"
+      :key="text"
+      :type="selection === id ? 'raised' : 'flat'"
       class="rounded-sm"
-      @click="selection = key"
+      @click="selection = id"
     >
-      {{ value }}
+      {{ text }}
     </CustomButton>
   </div>
 </template>

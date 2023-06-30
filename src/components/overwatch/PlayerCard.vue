@@ -8,18 +8,18 @@ defineProps<{ player: PlayerSummary }>();
 <template>
   <div class="relative h-[60px] w-[320px] text-black bg-white rounded-sm overflow-hidden">
     <div
-      class="absolute top-0 bottom-0 left-0 right-0 w-full h-full bg-cover bg-center bg-white"
+      class="absolute inset-0 w-full h-full bg-cover bg-center bg-white"
       :style="{
         backgroundImage: `url('${player.namecard}')`,
       }"
     ></div>
     <div
-      class="absolute top-0 bottom-0 left-0 right-0 flex flex-row items-center gap-2 bg-gradient-to-r from-white via-white via-40% to-transparent"
+      class="absolute inset-0 flex flex-row items-center gap-2 bg-gradient-to-r from-white via-white via-40% to-transparent"
     >
       <div
         class="aspect-square h-full bg-cover bg-center"
         :style="{
-          backgroundImage: `url('${player.avatar}'), url('${owAssets.player.defaultIcon}')`,
+          backgroundImage: `url('${player.avatar}'), url('${owAssets.gameIconDark}')`,
         }"
       ></div>
       <div class="flex flex-col">

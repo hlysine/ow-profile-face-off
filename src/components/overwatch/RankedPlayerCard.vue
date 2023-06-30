@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import PlayerCard from './PlayerCard.vue';
-import { rankToIndex, type ProfileSummary, type PerPlatform } from '@/owProfile';
+import { rankToIndex, type ProfileSummary, Platform } from '@/owProfile';
 import RoleRank from './RoleRank.vue';
 
 const props = withDefaults(
@@ -16,8 +16,8 @@ const emit = defineEmits<{
   click: [payload: MouseEvent];
 }>();
 
-const platform = computed<keyof PerPlatform<any>>(() => {
-  if (!props.profile.competitive) return 'pc';
+const platform = computed<Platform>(() => {
+  if (!props.profile.competitive) return Platform.PC;
   const { pc, console } = props.profile.competitive;
   const pcRank = pc
     ? Math.max(
@@ -34,9 +34,9 @@ const platform = computed<keyof PerPlatform<any>>(() => {
       )
     : 0;
   if (pcRank >= consoleRank) {
-    return 'pc';
+    return Platform.PC;
   } else {
-    return 'console';
+    return Platform.Console;
   }
 });
 const competitive = computed(() => props.profile.competitive?.[platform.value]);
@@ -50,7 +50,7 @@ const competitive = computed(() => props.profile.competitive?.[platform.value]);
     <PlayerCard :player="profile" class="rounded-b-none" />
     <div v-if="!!competitive" class="flex flex-col items-center gap-2 m-2">
       <span class="text-sm text-gray-400">
-        Season {{ competitive.season }} · {{ platform === 'pc' ? 'PC' : 'Console' }}
+        Season {{ competitive.season }} · {{ platform === Platform.PC ? 'PC' : 'Console' }}
       </span>
       <div class="flex">
         <RoleRank :rank="competitive.tank" />
@@ -64,7 +64,7 @@ const competitive = computed(() => props.profile.competitive?.[platform.value]);
     <div
       v-if="clickable"
       @click="e => emit('click', e)"
-      class="absolute top-0 bottom-0 left-0 right-0 bg-white opacity-0 hover:opacity-5 transition-opacity active:opacity-10 cursor-pointer"
+      class="absolute inset-0 bg-white opacity-0 hover:opacity-5 transition-opacity active:opacity-10 cursor-pointer"
     ></div>
   </div>
 </template>

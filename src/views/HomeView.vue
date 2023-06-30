@@ -52,7 +52,7 @@ const filteredResult = computed(() => {
     <div class="flex flex-col items-center overflow-y-scroll">
       <TextBox
         v-model="searchName"
-        class="w-[320px] m-4 mb-1"
+        class="w-2bw m-4 mb-1"
         :class="{ 'animate-pulse': fetching }"
         placeholder="Type in your Battle Tag"
         :is-valid="!validationError"

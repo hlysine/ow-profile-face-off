@@ -5,23 +5,25 @@ export interface OWProfile {
   stats: PerPlatform<PerGamemode<ProfileStats>>;
 }
 
-export interface PerPlatform<T> {
-  pc: T | null;
-  console: T | null;
-}
+export type PerPlatform<T> = {
+  [key in Platform]: T | null;
+};
 
-export interface PerGamemode<T> {
-  quickplay: T | null;
-  competitive: T | null;
-}
+export type PerGamemode<T> = {
+  [key in Gamemode]: T | null;
+};
 
 export type PerRole<T> = {
   [key in Role]: T | null;
 };
 
+export interface PerHero<T> {
+  [hero: string]: T | null | undefined;
+}
+
 export interface ProfileStats {
   heroes_comparisons: HeroesComparisons;
-  career_stats: { [key: string]: CareerStat[] | null };
+  career_stats: PerHero<CareerStat[]>;
 }
 
 export interface CareerStat {
@@ -112,6 +114,41 @@ export interface RoleInfo {
   description: string;
 }
 
+export interface StatsSummary {
+  general: GameStats;
+  roles: PerRole<GameStats>;
+  heroes: PerHero<GameStats>;
+}
+
+export interface GameStats {
+  games_played: number;
+  games_won: number;
+  games_lost: number;
+  time_played: number;
+  winrate: number;
+  kda: number;
+  total: BasicStats;
+  average: BasicStats;
+}
+
+export interface BasicStats {
+  eliminations: number;
+  assists: number;
+  deaths: number;
+  damage: number;
+  healing: number;
+}
+
+export enum Gamemode {
+  QuickPlay = 'quickplay',
+  Competitive = 'competitive',
+}
+
+export enum Platform {
+  PC = 'pc',
+  Console = 'console',
+}
+
 export enum Role {
   Tank = 'tank',
   Damage = 'damage',
@@ -167,16 +204,7 @@ export function rankToIndex(rank: Rank): number {
   return rankDivisionIndex(rank.division) * 10 + 6 - rank.tier;
 }
 
-export interface OWAssets {
-  player: {
-    defaultIcon: string;
-  };
-  heroes: {
-    [name: string]: string;
-  };
-}
-
-export const owAssets: OWAssets = assets;
+export const owAssets = assets;
 
 async function fetchViaProxy(url: string) {
   const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
@@ -198,6 +226,29 @@ export async function searchPlayerByName(playerName: string): Promise<APIRespons
 export async function fetchSummaryById(playerId: string): Promise<APIResponse<ProfileSummary>> {
   playerId = playerId.replace('#', '-');
   return await fetchViaProxy(`https://overfast-api.tekrop.fr/players/${playerId}/summary`);
+}
+
+interface StatsSummaryFetchOptions {
+  gamemode?: Gamemode;
+  platform?: Platform;
+}
+
+export async function fetchStatsSummaryById(
+  playerId: string,
+  { gamemode = undefined, platform = undefined }: StatsSummaryFetchOptions = {}
+): Promise<APIResponse<StatsSummary>> {
+  playerId = playerId.replace('#', '-');
+  const queries = [];
+  if (gamemode) queries.push(['gamemode', gamemode]);
+  if (platform) queries.push(['platform', platform]);
+  const queryString = queries.length === 0 ? '' : `?${queries.map(q => q.join('=')).join('&')}`;
+  const response = await fetchViaProxy(
+    `https://overfast-api.tekrop.fr/players/${playerId}/stats/summary${queryString}`
+  );
+  if (!('error' in response) && !('general' in response)) {
+    return { error: 'No data' };
+  }
+  return response;
 }
 
 export async function fetchProfileById(playerId: string): Promise<APIResponse<OWProfile>> {

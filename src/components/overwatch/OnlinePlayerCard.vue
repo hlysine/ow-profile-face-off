@@ -24,7 +24,7 @@ const router = useRouter();
 
 function openProfile() {
   router.push({
-    name: 'profile',
+    name: 'profile-overview',
     params: {
       playerId: props.playerId,
     },
@@ -43,7 +43,7 @@ function openProfile() {
     />
     <div
       v-if="displayResult !== result"
-      class="absolute top-0 bottom-0 left-0 right-0 flex flex-col items-center justify-center bg-gradient-to-t from-slate-950 via-slate-900 via-40% to-transparent border border-slate-800 box-border"
+      class="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-t from-slate-950 via-slate-900 via-40% to-transparent border border-slate-800 box-border"
     >
       <CustomButton @click="e => fetch(props.playerId)" type="flat">Load Preview</CustomButton>
     </div>

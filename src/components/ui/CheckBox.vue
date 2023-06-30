@@ -37,7 +37,7 @@ const checked = computed({
 
 <style scoped lang="postcss">
 .checkmark {
-  @apply absolute top-0 bottom-0 left-0 right-0 bg-white m-0.5 translate-y-[0.0625rem] translate-x-[0.0625rem] opacity-0 transition-all;
+  @apply absolute inset-0 bg-white m-0.5 translate-y-[0.0625rem] translate-x-[0.0625rem] opacity-0 transition-all;
   transform-origin: bottom left;
   clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 }

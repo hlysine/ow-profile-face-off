@@ -16,6 +16,18 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/ProfileView.vue'),
+      children: [
+        {
+          path: '',
+          name: 'profile-overview',
+          component: () => import('../views/Profile/OverviewView.vue'),
+        },
+        {
+          path: 'stats',
+          name: 'profile-stats',
+          component: () => import('../views/Profile/StatisticsView.vue'),
+        },
+      ],
     },
   ],
 });
