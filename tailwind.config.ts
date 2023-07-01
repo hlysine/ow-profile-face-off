@@ -1,4 +1,5 @@
 import { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
 
 const config: Config = {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
@@ -48,7 +49,22 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addVariant, matchVariant }) {
+      matchVariant('transit-from', value => {
+        return [`&.${value}-enter-to`, `&.${value}-leave-from`];
+      });
+      matchVariant('transit-to', value => {
+        return [`&.${value}-enter-from`, `&.${value}-leave-to`];
+      });
+      matchVariant('transiting', value => {
+        return [`&.${value}-enter-active`, `&.${value}-leave-active`];
+      });
+      addVariant('v-transit-from', ['&.v-enter-to', '&.v-leave-from']);
+      addVariant('v-transit-to', ['&.v-enter-from', '&.v-leave-to']);
+      addVariant('v-transiting', ['&.v-enter-active', '&.v-leave-active']);
+    }),
+  ],
 };
 
 export default config;

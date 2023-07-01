@@ -57,7 +57,7 @@ provide('player-profile', result);
             <KeepAlive>
               <Suspense>
                 <!-- main content -->
-                <component :is="Component" />
+                <component :is="Component" class="v-transit-to:opacity-0 v-transiting:transition-opacity" />
 
                 <!-- loading state -->
                 <template #fallback>

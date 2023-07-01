@@ -12,10 +12,12 @@ defineProps<{
   <div class="relative w-2bw h-1bh rounded-sm bg-slate-800 overflow-hidden">
     <div class="h-full w-full flex items-stretch">
       <div
-        class="opacity-50 bg-gradient-to-t from-blue-700 via-transparent via-75% to-transparent basis-0"
+        class="opacity-50 bg-gradient-to-t from-blue-700 via-transparent via-75% to-transparent basis-0 transition-all"
         :style="{ 'flex-grow': ratio * 2 }"
       />
-      <div class="opacity-50 bg-gradient-to-t from-red-700 via-transparent via-75% to-transparent basis-0 grow" />
+      <div
+        class="opacity-50 bg-gradient-to-t from-red-700 via-transparent via-75% to-transparent basis-0 grow transition-all"
+      />
     </div>
     <div class="absolute inset-0 flex flex-col p-4">
       <div class="flex items-center">

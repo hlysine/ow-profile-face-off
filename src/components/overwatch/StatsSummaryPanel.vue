@@ -9,6 +9,7 @@ import HeroSelectorCard from './HeroSelectorCard.vue';
 import { computed, reactive } from 'vue';
 import type { SelectedType } from './RoleHeroSelector.vue';
 import PlainTextCard from './PlainTextCard.vue';
+import TableStatCard from './TableStatCard.vue';
 
 const props = defineProps<{ stats: StatsSummary }>();
 
@@ -67,7 +68,7 @@ const gameStats = computed(() => {
         :left-stat="(gameStats.total.eliminations + gameStats.total.assists).toString()"
         right-title="Deaths"
         :right-stat="gameStats.total.deaths.toString()"
-        :ratio="gameStats.kda"
+        :ratio="gameStats.kda / 2"
       >
         <template #icon>
           <VueFeather type="crosshair" class="text-slate-400" :size="30" />
@@ -78,6 +79,10 @@ const gameStats = computed(() => {
           <VueFeather type="crosshair" class="text-slate-400" :size="30" />
         </template>
       </CircleStatCard>
+      <TableStatCard
+        :row-labels="Object.keys(gameStats.total)"
+        :columns="{ total: gameStats.total, 'Average per 10': gameStats.average }"
+      />
     </template>
   </div>
 </template>
