@@ -68,7 +68,8 @@ const icon = computed(() => {
   </CustomButton>
   <PopupModal v-model:show="selecting">
     <RoleHeroSelector
-      class="p-4"
+      class="p-8"
+      :selection-type="props.selectionType"
       :selected-type="type"
       :selected-key="key"
       @update:selected-key="

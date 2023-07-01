@@ -28,6 +28,7 @@ const gameStats = computed(() => {
 <template>
   <div class="flex flex-wrap align-center justify-center gap-4 max-w-3bw">
     <HeroSelectorCard
+      selection-type="everything"
       v-model:selected-type="heroSelection.type"
       v-model:selected-key="heroSelection.key"
     ></HeroSelectorCard>
