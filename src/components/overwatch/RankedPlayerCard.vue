@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { toRef } from 'vue';
 import PlayerCard from './PlayerCard.vue';
-import { rankToIndex, type ProfileSummary, Platform } from '@/owProfile';
+import { type ProfileSummary, Platform } from '@/owProfile';
 import RoleRank from './RoleRank.vue';
+import useCompetitiveSummary from '@/composables/useCompetitiveSummary';
 
 const props = withDefaults(
   defineProps<{
@@ -16,30 +17,7 @@ const emit = defineEmits<{
   click: [payload: MouseEvent];
 }>();
 
-const platform = computed<Platform>(() => {
-  if (!props.profile.competitive) return Platform.PC;
-  const { pc, console } = props.profile.competitive;
-  const pcRank = pc
-    ? Math.max(
-        pc.tank ? rankToIndex(pc.tank) : 0,
-        pc.damage ? rankToIndex(pc.damage) : 0,
-        pc.support ? rankToIndex(pc.support) : 0
-      )
-    : 0;
-  const consoleRank = console
-    ? Math.max(
-        console.tank ? rankToIndex(console.tank) : 0,
-        console.damage ? rankToIndex(console.damage) : 0,
-        console.support ? rankToIndex(console.support) : 0
-      )
-    : 0;
-  if (pcRank >= consoleRank) {
-    return Platform.PC;
-  } else {
-    return Platform.Console;
-  }
-});
-const competitive = computed(() => props.profile.competitive?.[platform.value]);
+const { platform, competitive } = useCompetitiveSummary(toRef(() => props.profile.competitive));
 </script>
 
 <template>

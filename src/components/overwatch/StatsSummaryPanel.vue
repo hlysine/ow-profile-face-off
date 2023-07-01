@@ -6,17 +6,22 @@ import { toShortDurationString } from '@/helper';
 import VueFeather from 'vue-feather';
 import ComparisonStatCard from './ComparisonStatCard.vue';
 import HeroSelectorCard from './HeroSelectorCard.vue';
-import { computed, reactive } from 'vue';
+import { computed, inject, reactive } from 'vue';
 import type { SelectedType } from './RoleHeroSelector.vue';
 import PlainTextCard from './PlainTextCard.vue';
 import TableStatCard from './TableStatCard.vue';
 
 const props = defineProps<{ stats: StatsSummary }>();
 
-const heroSelection = reactive({
-  type: 'all-hero' as SelectedType,
-  key: '',
-});
+const heroSelection =
+  inject<{
+    type: SelectedType;
+    key: string;
+  }>('hero-selection') ??
+  reactive({
+    type: 'all-hero' as SelectedType,
+    key: '',
+  });
 
 const gameStats = computed(() => {
   if (heroSelection.type === 'all-hero') return props.stats.general;
@@ -52,7 +57,7 @@ const gameStats = computed(() => {
         :left-stat="gameStats.games_won.toString()"
         right-title="Games Lost"
         :right-stat="gameStats.games_lost.toString()"
-        :ratio="gameStats.winrate / 100"
+        :ratio="gameStats.games_won / (gameStats.games_won + gameStats.games_lost)"
       >
         <template #icon>
           <VueFeather type="flag" class="text-slate-400" :size="30" />
@@ -68,7 +73,10 @@ const gameStats = computed(() => {
         :left-stat="(gameStats.total.eliminations + gameStats.total.assists).toString()"
         right-title="Deaths"
         :right-stat="gameStats.total.deaths.toString()"
-        :ratio="gameStats.kda / 2"
+        :ratio="
+          (gameStats.total.eliminations + gameStats.total.assists) /
+          (gameStats.total.eliminations + gameStats.total.assists + gameStats.total.deaths)
+        "
       >
         <template #icon>
           <VueFeather type="crosshair" class="text-slate-400" :size="30" />
