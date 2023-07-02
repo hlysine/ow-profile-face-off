@@ -43,7 +43,7 @@ const mostPlayed = computed(() => {
         v-for="heroStats in mostPlayed[role.key]"
         :key="heroStats.hero.key"
         type="raised"
-        class="!p-0 h-1bh w-32 bg-slate-800"
+        class="!p-0 h-1bh w-32 bg-slate-800 bg-opacity-50 backdrop-blur"
         :clickable="true"
         @click="emit('select', 'hero', heroStats.hero.key)"
       >

@@ -13,7 +13,7 @@ const growRatio = computed(() => props.ratio / (1 - props.ratio));
 </script>
 
 <template>
-  <div class="relative w-2bw h-1bh rounded-sm bg-slate-800 overflow-hidden">
+  <div class="relative w-2bw h-1bh rounded-sm bg-slate-800 bg-opacity-50 backdrop-blur overflow-hidden shadow">
     <div class="h-full w-full flex items-stretch">
       <div
         class="opacity-50 bg-gradient-to-t from-blue-700 via-transparent via-75% to-transparent basis-0 transition-all"

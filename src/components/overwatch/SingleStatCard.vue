@@ -6,7 +6,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="flex flex-col w-1bw h-1bh rounded-sm bg-slate-800 p-4">
+  <div class="flex flex-col w-1bw h-1bh rounded-sm bg-slate-800 bg-opacity-50 backdrop-blur p-4 shadow">
     <div class="flex items-center">
       <span class="flex-1 uppercase text-slate-400">{{ title }}</span>
       <slot name="icon" />

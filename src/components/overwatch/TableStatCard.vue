@@ -10,7 +10,7 @@ const columnEntries = computed(() => Object.entries(props.columns));
 </script>
 
 <template>
-  <table class="w-3bw h-2bh rounded-sm bg-slate-800 overflow-hidden">
+  <table class="w-3bw h-2bh rounded-sm bg-slate-800 bg-opacity-50 backdrop-blur overflow-hidden shadow">
     <colgroup>
       <col class="w-[30%]" />
       <col class="w-[35%]" />

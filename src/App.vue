@@ -20,6 +20,7 @@ if ('error' in heroes) {
 
 <template>
   <div class="w-screen h-screen">
+    <div class="absolute inset-0 -z-50 bg-[url(@/assets/poly.svg)] opacity-25"></div>
     <p v-if="!!errorMsg">{{ errorMsg }}</p>
     <RouterView v-else v-slot="{ Component }">
       <template v-if="Component">
