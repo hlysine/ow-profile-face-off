@@ -173,7 +173,8 @@ const leaderboardData = computed(() => {
       "
     >
       <HeroLeaderboard
-        :data="leaderboardData!"
+        v-if="!!leaderboardData"
+        :data="leaderboardData"
         :title="leaderboard.title"
         :formatter="leaderboard.formatter ?? (val => val.toString())"
         class="m-8"
