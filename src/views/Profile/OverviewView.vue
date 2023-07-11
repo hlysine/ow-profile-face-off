@@ -28,7 +28,7 @@ provide('hero-selection', heroSelection);
 </script>
 
 <template>
-  <LoadSpinner v-if="!result" />
+  <LoadSpinner v-if="!result" text="Loading statistics" />
   <div v-else class="flex flex-col w-full px-16 py-4" :class="{ 'animate-pulse': fetching }">
     <div class="flex flex-wrap ml-[148px] gap-2">
       <ButtonGroup :choices="{ All: undefined, PC: Platform.PC, Console: Platform.Console }" v-model="platform" />

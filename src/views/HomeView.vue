@@ -24,20 +24,23 @@ const { fetching, result, fetch } = useImperativeFetch(searchPlayerByName, 500);
 
 watchEffect(() => {
   if (!validationError.value && searchName.value !== '') {
-    fetch(searchName.value);
+    fetch(searchName.value.split('#')[0]);
   }
 });
 
 const filteredResult = computed(() => {
   if (!result.value || 'error' in result.value) {
     return result.value;
-  } else if (includePrivate.value) {
-    return result.value;
   } else {
-    return {
-      ...result.value,
-      results: result.value.results.filter(x => x.privacy === 'public'),
-    };
+    const resultCopy = { ...result.value };
+    if (searchName.value.split('#').length === 2) {
+      const tag = searchName.value.split('#')[1];
+      resultCopy.results = resultCopy.results.filter(x => x.player_id.split('-')[1].includes(tag));
+    }
+    if (!includePrivate.value) {
+      resultCopy.results = resultCopy.results.filter(x => x.privacy === 'public');
+    }
+    return resultCopy;
   }
 });
 </script>

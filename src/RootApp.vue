@@ -8,7 +8,7 @@ import LoadSpinner from './components/ui/LoadSpinner.vue';
     <App />
     <template #fallback>
       <div class="h-screen w-screen">
-        <LoadSpinner :size="64" />
+        <LoadSpinner :size="64" text="Downloading game data" />
       </div>
     </template>
   </Suspense>

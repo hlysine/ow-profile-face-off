@@ -32,7 +32,7 @@ provide('player-profile', result);
   <div v-if="!!result && 'error' in result" class="m-16 text-xl text-center">
     {{ result.error }}
   </div>
-  <LoadSpinner v-else-if="!result" />
+  <LoadSpinner v-else-if="!result" text="Loading player profile" />
   <div v-else class="w-full h-full flex flex-col items-center">
     <div
       class="relative bg-cover bg-center h-[200px] w-full flex-shrink-0"
@@ -61,7 +61,7 @@ provide('player-profile', result);
 
                 <!-- loading state -->
                 <template #fallback>
-                  <LoadSpinner :size="64" />
+                  <LoadSpinner :size="64" text="Loading profile section" />
                 </template>
               </Suspense>
             </KeepAlive>

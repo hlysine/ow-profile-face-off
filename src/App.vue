@@ -32,7 +32,7 @@ if ('error' in heroes) {
 
               <!-- loading state -->
               <template #fallback>
-                <LoadSpinner :size="64" />
+                <LoadSpinner :size="64" text="Loading page" />
               </template>
             </Suspense>
           </KeepAlive>
