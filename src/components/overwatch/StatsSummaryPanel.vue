@@ -11,6 +11,7 @@ import type { SelectedType } from './RoleHeroSelector.vue';
 import PlainTextCard from './PlainTextCard.vue';
 import TableStatCard from './TableStatCard.vue';
 import get from 'lodash/get';
+import capitalize from 'lodash/capitalize';
 import PopupModal from '../ui/PopupModal.vue';
 import HeroLeaderboard from './HeroLeaderboard.vue';
 
@@ -108,6 +109,20 @@ const leaderboardData = computed(() => {
         right-title="Games Lost"
         :right-stat="gameStats.games_lost.toString()"
         :ratio="gameStats.games_won / (gameStats.games_won + gameStats.games_lost)"
+        @click-left="
+          () => {
+            leaderboard.key = 'games_won';
+            leaderboard.title = 'Games Won';
+            leaderboard.formatter = undefined;
+          }
+        "
+        @click-right="
+          () => {
+            leaderboard.key = 'games_lost';
+            leaderboard.title = 'Games Lost';
+            leaderboard.formatter = undefined;
+          }
+        "
       >
         <template #icon>
           <VueFeather type="flag" class="text-slate-400" :size="30" />
@@ -138,6 +153,20 @@ const leaderboardData = computed(() => {
           (gameStats.total.eliminations + gameStats.total.assists) /
           (gameStats.total.eliminations + gameStats.total.assists + gameStats.total.deaths)
         "
+        @click-left="
+          () => {
+            leaderboard.key = 'total.eliminations';
+            leaderboard.title = 'Total Eliminations';
+            leaderboard.formatter = undefined;
+          }
+        "
+        @click-right="
+          () => {
+            leaderboard.key = 'total.deaths';
+            leaderboard.title = 'Total Deaths';
+            leaderboard.formatter = undefined;
+          }
+        "
       >
         <template #icon>
           <VueFeather type="crosshair" class="text-slate-400" :size="30" />
@@ -162,6 +191,13 @@ const leaderboardData = computed(() => {
       <TableStatCard
         :row-labels="Object.keys(gameStats.total)"
         :columns="{ Total: gameStats.total, 'Average per 10': gameStats.average }"
+        @click-cell="
+          (row: string, column: string) => {
+            leaderboard.key = `${column === 'Total' ? 'total' : 'average'}.${row as keyof BasicStats}`;
+            leaderboard.title = column === 'Total' ? `Total ${capitalize(row)}` : `Average ${capitalize(row)} Per 10 Mins`;
+            leaderboard.formatter = undefined;
+          }
+        "
       />
     </template>
     <PopupModal

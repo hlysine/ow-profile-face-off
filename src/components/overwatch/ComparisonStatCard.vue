@@ -8,6 +8,10 @@ const props = defineProps<{
   rightStat: string;
   ratio: number;
 }>();
+const emit = defineEmits<{
+  clickLeft: [payload: MouseEvent];
+  clickRight: [payload: MouseEvent];
+}>();
 
 const growRatio = computed(() => props.ratio / (1 - props.ratio));
 </script>
@@ -34,6 +38,16 @@ const growRatio = computed(() => props.ratio / (1 - props.ratio));
         <span class="flex-1 text-blue-400 text-5xl truncate">{{ leftStat }}</span>
         <span class="flex-1 text-red-400 text-5xl truncate text-right">{{ rightStat }}</span>
       </div>
+    </div>
+    <div class="absolute inset-0 flex items-stretch justify-stretch">
+      <button
+        class="flex-1 rounded-none bg-gradient-to-r from-slate-300 to-transparent opacity-0 hover:opacity-5 active:opacity-10 transition-opacity"
+        @click="e => emit('clickLeft', e)"
+      />
+      <button
+        class="flex-1 rounded-none bg-gradient-to-l from-slate-300 to-transparent opacity-0 hover:opacity-5 active:opacity-10 transition-opacity"
+        @click="e => emit('clickRight', e)"
+      />
     </div>
   </div>
 </template>
